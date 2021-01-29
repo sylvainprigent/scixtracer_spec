@@ -1,7 +1,7 @@
 {
     "classes":[
         {
-            "name": "SObject",
+            "name": "SxObject",
             "description": "Mother class for each class of the API",
             "getters":[
                 {
@@ -19,8 +19,8 @@
             ]
         },
         {
-            "name": "SLog",
-            "extends": "SObject",
+            "name": "SxLog",
+            "extends": "SxObject",
             "description": "Abstract class for logger. Logger here mention tools to print error and progress in console or GUI",
             "methods":[
                 {
@@ -72,6 +72,19 @@
             "description": "Implementation of SLog to print log in a txt log file",
             "methods":[
                 {
+                    "name": "open_file(file)",
+                    "description": "Open the log file",
+                    "inputs":[
+                        {"name": "file", "type": "string", "description": "Path of the log file"}
+                    ],
+                    "return": {"type": "int", "description": "0 if ok, or 1 if an error occured"} 
+                },
+                {
+                    "name": "close_file()",
+                    "description": "Close the log file",
+                    "return": {"type": "int", "description": "0 if ok, or 1 if an error occured"} 
+                },
+                {
                     "name": "notify(status, message)",
                     "description": "Append the notification in a log file",
                     "inputs": [
@@ -84,7 +97,7 @@
                     "name": "progress(percentage)",
                     "description": "Append a progress in the log file",
                     "inputs": [
-                        {"name": "purcentage", "type": "int", "description": "Progress percentage in [0, 100]"}
+                        {"name": "percentage", "type": "int", "description": "Progress percentage in [0, 100]"}
                     ],
                     "return": {"type": "int", "description": "0 if ok, or 1 if an error occured"} 
                 }
