@@ -140,9 +140,9 @@
             ],
             "setters":[
                 {
-                    "method": "set_up_to_date()",
+                    "method": "set_up_to_date(value)",
                     "description": "Force the up to date to True. You should not use this method, it is for Request internal use",
-                    "return": {"type": "int", "description": "0 if ok, or 1 if an error occured"} 
+                    "inputs":[ {"name": "value", "type": "bool", "description": "True if up to date, false otherwise"}]
                 },
                 {
                     "method": "set_parent(parent)",
@@ -182,26 +182,23 @@
                 {   
                     "method": "set_username(username)", 
                     "description": "Set the username (or login)",
-                    "inputs": [{"name": "username", "type": "string", "description": "The username (or login)"}],
-                    "return": {"type": "bool", "description": "0 if ok, or 1 if an error occured"}
+                    "inputs": [{"name": "username", "type": "string", "description": "The username (or login)"}]
                 },
                 {   
                     "method": "set_email(email)", 
                     "description": "Set the user email address",
                     "inputs": {"name": "email", "type": "string", "description": "The user email address"},
-                    "return": {"type": "bool", "description": "0 if ok, or 1 if an error occured"}
+                    "throws": "SxException if the string is not formated like an email"
                 },
                 {   
                     "method": "set_name(name)", 
-                    "description": "Get the user name (familly name)",
-                    "inputs": [{"name": "name", "type": "string", "description": "The user name (familly name)"}],
-                    "return": {"type": "bool", "description": "0 if ok, or 1 if an error occured"}
+                    "description": "Set the user name (familly name)",
+                    "inputs": [{"name": "name", "type": "string", "description": "The user name (familly name)"}]
                 },
                 {   
                     "method": "set_firstname(firstname)", 
                     "description": "Get the user firstname",
-                    "inputs": [{"name": "firstname","type": "string", "description": "The user firstname"}],
-                    "return": {"type": "bool", "description": "0 if ok, or 1 if an error occured"}
+                    "inputs": [{"name": "firstname","type": "string", "description": "The user firstname"}]
                 }
             ]
         },
@@ -219,6 +216,7 @@
             "setters":[
                 {   
                     "method": "set_name(name)", 
+                    "description": "Set the name of the format",
                     "inputs":[ {"name": "name", "type": "string", "description": "Name of the format"} ], 
                     "return": {"type": "bool", "description": "0 if ok, or 1 if an error occured"}
                 }
@@ -255,26 +253,23 @@
                 {
                     "method": "set_year(value)",
                     "description": "Set the date year",
-                    "inputs": [{"name": "value", "type": "int", "descirption": "Year of the date"}],
-                    "return": {"type": "int", "description": "0 if ok, or 1 if an error occured"} 
+                    "inputs": [{"name": "value", "type": "int", "descirption": "Year of the date"}]
                 },
                 {
                     "method": "set_month(value)",
                     "description": "Set the date month",
-                    "inputs": [{"name": "value", "type": "int", "descirption": "Month of the date"}],
-                    "return": {"type": "int", "description": "0 if ok, or 1 if an error occured"} 
+                    "inputs": [{"name": "value", "type": "int", "descirption": "Month of the date"}]
                 },
                 {
                     "method": "set_day(value)",
                     "description": "Set the date day",
-                    "inputs": [{"name": "value", "type": "int", "descirption": "Day of the date"}],
-                    "return": {"type": "int", "description": "0 if ok, or 1 if an error occured"} 
+                    "inputs": [{"name": "value", "type": "int", "descirption": "Day of the date"}]
                 },
                 {
                     "method": "set_from_string(value)",
                     "description": "Set the date by parsing a string. Possible formats are 'YYYY-MM-DD' or 'DD/MM/YYYY'",
                     "inputs": [{"name": "value", "type": "string", "descirption": "Date as a string"}],
-                    "return": {"type": "int", "description": "0 if ok, or 1 if an error occured"} 
+                    "throws": "SxException if the format is not correct"
                 }
             ]
         },
@@ -307,40 +302,50 @@
                     "inputs": [
                         {"name": "key", "type": "string", "description": "Key of the tag"},
                         {"name": "value", "type": "string", "description": "Value of the tag"}
-                    ],
-                    "return": {"type": "int", "description": "0 if ok, or 1 if an error occured"}
+                    ]
                 }
             ]
         },
         {
-            "name": "SMetadata",
-            "extends": "SContainer",
+            "name": "SxMetadata",
+            "extends": "SxContainer",
             "description": "Abstract parent class to all metadata containers",
             "methods":[
                 {
                     "name": "add_child(container)",
                     "description": "Add a child container",
-                    "inputs": [{"name": "container", "type": "SContainer", "description": "Reference to the child container"}],
-                    "return": {"type": "int", "description": "0 if ok, or 1 if an error occured"} 
+                    "inputs": [{"name": "container", "type": "SxMetadata", "description": "Reference to the child container"}]
                 }
             ],
             "getters":[
                 {
+                    "name": "get_uri()",
+                    "description": "Get the metadata URI",
+                    "return": {"type": "SxMetadata", "description": "Reference to the child container, or null reference if not exists"} 
+                },
+                {
                     "name": "get_child(uri)",
                     "description": "Get a child from it URI",
                     "inputs": [{"name": "uri", "type": "string", "description": "URI of the child metadata"}],
-                    "return": {"type": "SContainer", "description": "Reference to the child container, or null reference if not exists"} 
+                    "return": {"type": "SxMetadata", "description": "Reference to the child container, or null reference if not exists"} 
                 },
                 {
                     "name": "get_children_at(index)",
                     "description": "Get a child from it index in the children map",
                     "inputs": [{"name": "index", "type": "int", "description": "Index of the child metadata in the children map"}],
-                    "return": {"type": "SContainer", "description": "Reference to the child container, or null reference if not exists"} 
+                    "return": {"type": "SxMetadata", "description": "Reference to the child container, or null reference if not exists"} 
                 },
                 {
                     "name": "get_children_count()",
                     "description": "Get a number of children in the children map",
                     "return": {"type": "int", "description": "Number of children in the children map"} 
+                }
+            ],
+            "setters":[
+                {
+                    "name": "set_uri(uri)",
+                    "description": "Set the metadata URI",
+                    "inputs": [{"name": "uri", "type": "string", "description": "URI of the metadata"}]
                 }
             ]
         },
@@ -360,14 +365,9 @@
                     "return": {"type": "string", "description": "Name of the data"}
                 },
                 {
-                    "method": "get_uri()", 
-                    "description": "Get the URI of the data",
-                    "return": {"type": "string", "description": "URI of the data file"}
-                },
-                {
                     "method": "get_author()", 
-                    "description": "Get the username of the data author",    
-                    "return": {"type": "string", "description": "Username of the data author"}
+                    "description": "Get the data author",    
+                    "return": {"type": "string", "description": "Reference to the data author information"}
                 },
                 {
                     "method": "get_date()", 
@@ -385,37 +385,27 @@
                     "method": "set_type(type)", 
                     "description": "Set the type of the data. Possible values are (raw, processed)",
                     "inputs": [{"name": "type", "type": "string", "description": "Type of the data"} ],
-                    "return": {"type": "int", "description": "0 if ok, or 1 if an error occured"}
+                    "throws": "SxException if the type is not correct"
                 },
                 {
                     "method": "set_name(name)", 
                     "description": "Set the name of the data",
-                    "inputs": [{"name": "name", "type": "string", "description": "Name of the data"} ],
-                    "return": {"type": "int", "description": "0 if ok, or 1 if an error occured"}
+                    "inputs": [{"name": "name", "type": "string", "description": "Name of the data"} ]
                 },
                 {
-                    "method": "set_uri(uri)", 
-                    "description": "Set the URI of the data",
-                    "inputs": [{"name": "uri", "type": "string", "description": "URI of the data file"} ],
-                    "return": {"type": "int", "description": "0 if ok, or 1 if an error occured"}
-                },
-                {
-                    "method": "set_author(username)", 
-                    "description": "Set the username of the data author",   
-                    "inputs": [{"name": "username", "type": "string", "description": "Username of the data author"} ],
-                    "return": {"type": "int", "description": "0 if ok, or 1 if an error occured"}
+                    "method": "set_author(user)", 
+                    "description": "Set the user of the data author",   
+                    "inputs": [{"name": "user", "type": "SxUser", "description": "User reference of the data author"} ]
                 },
                 {
                     "method": "set_date(date)", 
                     "description": "Set the creation date of the data",
-                    "inputs": [{"name": "date", "type": "SDate", "description": "Creation date of the data"} ],
-                    "return": {"type": "int", "description": "0 if ok, or 1 if an error occured"}
+                    "inputs": [{"name": "date", "type": "SDate", "description": "Creation date of the data"} ]
                 },
                 {
                     "method": "set_format(format)", 
                     "description": "Set the data format",
-                    "inputs": [{"name": "format", "type": "SFormat", "description": "Data format"} ],
-                    "return": {"type": "int", "description": "0 if ok, or 1 if an error occured"}
+                    "inputs": [{"name": "format", "type": "SFormat", "description": "Data format"} ]
                 }
             ]
         },
@@ -434,8 +424,7 @@
                 {
                     "method": "set_tags(tags)", 
                     "description": "Set the map of the tag associated to the data",
-                    "inputs": [{"name": "tags", "type": "STags", "description": "Map of the tags describing to the data"} ],
-                    "return": {"type": "int", "description": "0 if ok, or 1 if an error occured"}
+                    "inputs": [{"name": "tags", "type": "STags", "description": "Map of the tags describing to the data"} ]
                 }
             ]
         },
@@ -447,8 +436,7 @@
                 {
                     "method": "set_run_uri(uri)", 
                     "description": "Set the URI of the run metadata",
-                    "inputs": [{"name": "uri", "type": "string", "description": "URI of the run metadata"} ],
-                    "return": {"type": "int", "description": "0 if ok, or 1 if an error occured"}    
+                    "inputs": [{"name": "uri", "type": "string", "description": "URI of the run metadata"} ]
                 },
                 {
                     "method": "set_run_input(name, input)", 
@@ -456,22 +444,20 @@
                     "inputs": [
                         {"name": "name", "type": "string", "description": "Name of the input data"}, 
                         {"name": "input", "type": "SProcessedDataInput", "description": "Container for a run input"} 
-                    ],
-                    "return": {"type": "int", "description": "0 if ok, or 1 if an error occured"}                    
+                    ]                   
                 },
                 {
                     "method": "set_run_output(output)", 
                     "description": "Set the run output. Only one ouput possible which is this processed data",
                     "inputs": [
                         {"name": "output", "type": "SProcessedDataOutput", "description": "Container for a run output"} 
-                    ],
-                    "return": {"type": "int", "description": "0 if ok, or 1 if an error occured"}                    
+                    ]                 
                 }
             ],
             "getters": [
                 {
                     "name": "get_run_uri()",
-                    "description": "Set the URI of the run metadata",
+                    "description": "Get the URI of the run metadata",
                     "return": {"type": "string", "description": "URI of the run metadata"}    
                 },
                 {
@@ -691,24 +677,21 @@
                     "description": "Set the input name",
                     "inputs": [
                         {"name": "name", "type": "string", "description": "Name of the process input"}
-                    ],
-                    "return": {"type": "int", "description": "0 if ok, or 1 if an error occured"}                    
+                    ]                  
                 },
                 {
                     "method": "set_uri(uri)",
                     "description": "Set the input data URI",
                     "inputs": [
                         {"name": "uri", "type": "string", "description": "URI of the input data"}
-                    ],
-                    "return": {"type": "int", "description": "0 if ok, or 1 if an error occured"}  
+                    ]  
                 },
                 {
                     "method": "set_type(type)",
                     "description": "Set the input data type (raw or processed)",
                     "inputs": [
                         {"name": "type", "type": "string", "description": "Type of the data (raw or processed)"}
-                    ],
-                    "return": {"type": "int", "description": "0 if ok, or 1 if an error occured"}                     
+                    ]                    
                 }
             ]
         },
@@ -810,40 +793,35 @@
                     "description": "Set the URI of the processed dataset where the run stored the results",
                     "inputs": [
                         {"name": "uri", "type": "string", "description": "URI of the processed dataset"}
-                    ],
-                    "return": {"type": "int", "description": "0 if ok, or 1 if an error occured"}  
+                    ] 
                 },
                 {
                     "name": "set_process_name(name)",
                     "description": "Set the name of the process that is runned",
                     "inputs": [
                         {"name": "name", "type": "string", "description": "Name of the process"}
-                    ],
-                    "return": {"type": "int", "description": "0 if ok, or 1 if an error occured"}  
+                    ]
                 },
                 {
                     "name": "set_process_uri(uri)",
                     "description": "Set the URI of the process that is runned",
                     "inputs": [
                         {"name": "uri", "type": "string", "description": "URI of the process"}
-                    ],
-                    "return": {"type": "int", "description": "0 if ok, or 1 if an error occured"}
+                    ]
                 },
                 {
                     "name": "set_input(input)",
                     "description": "Set the input at the index",
                     "inputs": [
                         {"name": "input", "type": "SRunInput", "description": "Reference to the run input container"}
-                    ],
-                    "return": {"type": "int", "description": "0 if ok, or 1 if an error occured"}
+                    ]
                 },
                 {
                     "name": "set_parameter(parameter)",
                     "description": "Set the parameter at the index",
                     "inputs": [
                         {"name": "parameter", "type": "SRunParameter", "description": "Reference to the run parameter container"}
-                    ],
-                    "return": {"type": "int", "description": "0 if ok, or 1 if an error occured"}
+                    ]
                 }
             ]
         },
@@ -879,24 +857,21 @@
                     "description": "Set the name of the input",
                     "inputs": [
                         {"name": "name", "type": "string", "description": "Name of the input"}
-                    ],
-                    "return": {"type": "int", "description": "0 if ok, or 1 if an error occured"}
+                    ]
                 },
                 {
                     "name": "set_dataset(uri)",
                     "description": "Set the dataset where the input data is stored",
                     "inputs": [
                         {"name": "uri", "type": "string", "description": "URI of input dataset"}
-                    ],
-                    "return": {"type": "int", "description": "0 if ok, or 1 if an error occured"}
+                    ]
                 },
                 {
                     "name": "set_query(query)",
                     "description": "Set the query used to select data in the input dataset. The query is a RegExp",
                     "inputs": [
                         {"name": "query", "type": "string", "description": "Query used to select input data"}
-                    ],
-                    "return": {"type": "int", "description": "0 if ok, or 1 if an error occured"}
+                    ]
                 },
                 {
                     "name": "set_origin_output_name(name)",
@@ -904,7 +879,6 @@
                     "inputs": [
                         {"name": "name", "type": "string", "description": "Name of the origin output"}
                     ],
-                    "return": {"type": "int", "description": "0 if ok, or 1 if an error occured"}
                 }    
             ]
         }, 
@@ -930,16 +904,14 @@
                     "description": "Set the name of the parameter",
                     "inputs": [
                         {"name": "name", "type": "string", "description": "Name of the parameter"}
-                    ],
-                    "return": {"type": "int", "description": "0 if ok, or 1 if an error occured"}
+                    ]
                 },
                 {
                     "name": "set_value(value)",
                     "description": "Set the value of the parameter",
                     "inputs": [
                         {"name": "value", "type": "string", "description": "Value of the parameter"}
-                    ],
-                    "return": {"type": "int", "description": "0 if ok, or 1 if an error occured"}
+                    ]
                 }
             ]
         },
